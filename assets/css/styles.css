@@ -76,6 +76,32 @@ h1 {
   color: var(--text-primary);
 }
 
+.hero-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+}
+
+.hero-copy {
+  min-width: 0;
+}
+
+.hero-qr {
+  width: 104px;
+  height: 104px;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1px solid var(--surface-border);
+  background: linear-gradient(180deg, var(--canvas-bg-start), var(--canvas-bg-end));
+  justify-self: end;
+  align-self: center;
+}
+
+.hero-copy h1 {
+  margin: 0 0 8px;
+}
+
 h2 {
   font-size: 16px;
   color: var(--text-primary);
@@ -341,6 +367,7 @@ button.task1-fs-reset-btn {
   font: inherit;
   line-height: 1.2;
   padding: 6px 10px;
+  white-space: nowrap;
 }
 
 button.task1-fs-reset-btn:hover {
@@ -356,4 +383,26 @@ input[type="range"]:focus-visible,
 button.task1-fs-reset-btn:focus-visible {
   outline: 2px solid #8aa7d5;
   outline-offset: 2px;
+}
+
+@media (max-width: 520px) {
+  .hero-qr {
+    width: 62px;
+    height: 62px;
+  }
+
+  .hero-layout {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .hero-qr {
+    justify-self: end;
+    align-self: start;
+  }
+
+  button.task1-fs-reset-btn {
+    font-size: 11px;
+    padding: 5px 8px;
+  }
 }
