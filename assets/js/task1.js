@@ -159,7 +159,7 @@ function renderTask1Core(phaseTimeSec) {
     document.getElementById("c_sum"),
     buffers.sumOverlayRef,
     buffers.sum,
-    `sum: f1 + f2 + f3 (window = ${T_END}s) + sum ref (fs=${FS_REF})`,
+    `sum: f1 + f2 + f3 (window = ${T_END}s)`,
     "samples",
     "amplitude",
     { periodMarkers: 3 }
