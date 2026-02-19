@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>coe216 hw1 — sampling + dtmf</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>coe216 hw1 demo (js) — sampling + dtmf</h1>
+      <div class="row">
+        <div class="pill mono">f0 = 128 Hz</div>
+        <div class="pill mono">f1 = 128 Hz</div>
+        <div class="pill mono">f2 = 64 Hz</div>
+        <div class="pill mono">f3 = 1280 Hz</div>
+        <div class="pill mono">task 2 fs = 8000 Hz</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>task 1 — sampled sinusoids (3 stacked) + sum</h2>
+      <div class="controls">
+        <label class="toggle mono" for="animPhase">
+          <input id="animPhase" type="checkbox" checked />
+          <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
+          <span>animate (phase)</span>
+        </label>
+
+        <div class="pill mono">task 1 fs</div>
+        <input id="fsTask1" type="range" min="400" max="10000" step="1" value="8000" />
+        <button type="button" class="pill mono task1-fs-reset-btn" id="fsTask1Label">8000 Hz</button>
+
+      </div>
+      <div class="spacer-10"></div>
+      <div class="stack">
+        <canvas id="c_f1"></canvas>
+        <canvas id="c_f2"></canvas>
+        <canvas id="c_f3"></canvas>
+      </div>
+      <div class="spacer-10"></div>
+      <canvas id="c_sum"></canvas>
+    </div>
+
+    <div class="card">
+      <h2>task 2 — dtmf keypad + time domain + (bonus) fft spectrum</h2>
+
+      <div class="grid2">
+        <div class="card card-tight">
+          <div class="controls task2-controls">
+            <div class="pill pill-icon" title="duration" aria-label="duration">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="13" r="7"></circle>
+                <path d="M12 13V9M12 13L15 15"></path>
+                <path d="M9 3h6M12 3v3"></path>
+              </svg>
+            </div>
+            <input id="dur" type="range" min="0.2" max="0.5" step="0.01" value="0.30" />
+            <span class="pill mono" id="durLabel">0.30 s</span>
+
+            <div class="pill pill-icon" title="volume" aria-label="volume">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M4 14h4l5 4V6L8 10H4z"></path>
+                <path d="M17 9a4 4 0 0 1 0 6"></path>
+                <path d="M19.5 6.5a7.5 7.5 0 0 1 0 11"></path>
+              </svg>
+            </div>
+            <input id="vol" type="range" min="0" max="1" step="0.01" value="0.35" />
+            <span class="pill mono" id="volLabel">35.00%</span>
+          </div>
+
+          <div class="spacer-10"></div>
+
+          <div class="dtmf-map-scroll">
+            <div class="dtmf-map">
+              <div class="dtmf-col-labels">
+                <div class="pill mono dtmf-col-label">1209 Hz</div>
+                <div class="pill mono dtmf-col-label">1336 Hz</div>
+                <div class="pill mono dtmf-col-label">1477 Hz</div>
+                <div class="pill mono dtmf-col-label">1633 Hz</div>
+              </div>
+              <div class="pad" id="pad"></div>
+              <div class="dtmf-row-labels">
+                <div class="pill mono dtmf-row-label">697 Hz</div>
+                <div class="pill mono dtmf-row-label">770 Hz</div>
+                <div class="pill mono dtmf-row-label">852 Hz</div>
+                <div class="pill mono dtmf-row-label">941 Hz</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="spacer-10"></div>
+          <div class="row">
+            <div class="pill mono" id="lastKey">last key: —</div>
+            <div class="pill mono" id="lastFreq">freqs: —</div>
+          </div>
+          <p class="muted err" id="err"></p>
+        </div>
+
+        <div class="stack">
+          <div class="card card-tight">
+            <div class="row">
+              <div class="pill mono">time domain</div>
+              <div class="pill mono" id="timeInfo">n = —</div>
+            </div>
+            <div class="spacer-10"></div>
+            <canvas id="c_time"></canvas>
+          </div>
+
+          <div class="card card-tight">
+            <div class="row">
+              <div class="pill mono">frequency domain (fft)</div>
+              <div class="pill mono" id="fftInfo">nfft = —</div>
+            </div>
+            <div class="spacer-10"></div>
+            <canvas id="c_fft"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
