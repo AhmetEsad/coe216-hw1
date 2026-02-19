@@ -1,0 +1,3 @@
+- define the nyquist rate and explain why it matters (nyquist: ../context/explanations/nyquist.md)
+- what is dtmf?
+- dtmf keypad values? why we've picked the ones we picked
