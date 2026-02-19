@@ -73,8 +73,17 @@ function xAxisLabelY(h, hasPeriodMarkers) {
   return hasPeriodMarkers ? h - 30 : h - 14;
 }
 
-function yAxisLabelY(pad) {
-  return pad + 10;
+function isCompactCanvas(w) {
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+  return w / dpr <= 520;
+}
+
+function titleLabelY(pad, w) {
+  return isCompactCanvas(w) ? pad - 4 : pad - 10;
+}
+
+function yAxisLabelY(pad, w) {
+  return isCompactCanvas(w) ? pad + 16 : pad + 10;
 }
 
 export function plotSignal(canvas, samples, title, xLabel, yLabel, options = {}) {
@@ -112,9 +121,9 @@ export function plotSignal(canvas, samples, title, xLabel, yLabel, options = {})
   const hasPeriodMarkers = Number.isFinite(periodMarkers) && periodMarkers > 0;
   const xLabelY = xAxisLabelY(h, hasPeriodMarkers);
 
-  drawLabel(ctx, title, pad, pad - 10);
+  drawLabel(ctx, title, pad, titleLabelY(pad, w));
   drawLabel(ctx, xLabel, w - pad - ctx.measureText(xLabel).width, xLabelY);
-  drawLabel(ctx, yLabel, 8, yAxisLabelY(pad));
+  drawLabel(ctx, yLabel, 8, yAxisLabelY(pad, w));
   if (hasPeriodMarkers) {
     drawPeriodMarkers(ctx, w, h, pad, periodMarkers);
   }
@@ -177,9 +186,9 @@ export function plotSignalPoints(canvas, samples, title, xLabel, yLabel, options
   const hasPeriodMarkers = Number.isFinite(periodMarkers) && periodMarkers > 0;
   const xLabelY = xAxisLabelY(h, hasPeriodMarkers);
 
-  drawLabel(ctx, title, pad, pad - 10);
+  drawLabel(ctx, title, pad, titleLabelY(pad, w));
   drawLabel(ctx, xLabel, w - pad - ctx.measureText(xLabel).width, xLabelY);
-  drawLabel(ctx, yLabel, 8, yAxisLabelY(pad));
+  drawLabel(ctx, yLabel, 8, yAxisLabelY(pad, w));
   if (hasPeriodMarkers) {
     drawPeriodMarkers(ctx, w, h, pad, periodMarkers);
   }
@@ -260,9 +269,9 @@ export function plotSignalOverlay(canvas, denseSamples, sampledPoints, title, xL
   const hasPeriodMarkers = Number.isFinite(periodMarkers) && periodMarkers > 0;
   const xLabelY = xAxisLabelY(h, hasPeriodMarkers);
 
-  drawLabel(ctx, title, pad, pad - 10);
+  drawLabel(ctx, title, pad, titleLabelY(pad, w));
   drawLabel(ctx, xLabel, w - pad - ctx.measureText(xLabel).width, xLabelY);
-  drawLabel(ctx, yLabel, 8, yAxisLabelY(pad));
+  drawLabel(ctx, yLabel, 8, yAxisLabelY(pad, w));
   if (hasPeriodMarkers) {
     drawPeriodMarkers(ctx, w, h, pad, periodMarkers);
   }
