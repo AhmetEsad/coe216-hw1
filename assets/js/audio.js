@@ -87,7 +87,13 @@ function encodeWav16Mono(samples, sampleRate) {
 }
 
 async function playSamplesWithHtmlAudio(samples, volume) {
-  const blob = encodeWav16Mono(samples, FS);
+  const safeVolume = Math.max(0, Math.min(1, volume));
+  const scaled = new Float32Array(samples.length);
+  for (let i = 0; i < samples.length; i++) {
+    scaled[i] = samples[i] * safeVolume;
+  }
+
+  const blob = encodeWav16Mono(scaled, FS);
   const url = URL.createObjectURL(blob);
   const audio = new Audio(url);
   const ref = { audio, url };
@@ -95,7 +101,7 @@ async function playSamplesWithHtmlAudio(samples, volume) {
 
   audio.preload = "auto";
   audio.playsInline = true;
-  audio.volume = Math.max(0, Math.min(1, volume));
+  audio.volume = 1;
 
   const cleanup = () => {
     if (!activeHtmlAudio.has(ref)) return;
