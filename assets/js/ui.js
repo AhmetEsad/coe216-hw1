@@ -106,7 +106,7 @@ export function setupUi() {
         document.getElementById("c_fft"),
         mags,
         fftFreqs,
-        `dtmf "${key.toUpperCase()}" - magnitude spectrum`
+        ``
       );
     } catch (error) {
       errEl.textContent = `audio error: ${error?.message || String(error)}`;
