@@ -51,6 +51,28 @@ export function setupUi() {
     window.addEventListener("click", unlockAudioOnce, opts);
   }
 
+  function attachButtonDoubleTapGuard() {
+    let lastTapMs = 0;
+    const doubleTapMs = 350;
+
+    document.addEventListener("touchend", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      const button = target.closest("button");
+      if (!button) return;
+
+      const now = performance.now();
+      const elapsed = now - lastTapMs;
+      if (elapsed > 0 && elapsed < doubleTapMs) {
+        event.preventDefault();
+        button.click();
+      }
+
+      lastTapMs = now;
+    }, { passive: false });
+  }
+
   async function onKey(key) {
     errEl.textContent = "";
     unlockAudioOnce();
@@ -93,4 +115,5 @@ export function setupUi() {
 
   buildPad();
   attachAudioUnlockListeners();
+  attachButtonDoubleTapGuard();
 }

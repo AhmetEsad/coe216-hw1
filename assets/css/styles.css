@@ -39,6 +39,8 @@ body {
   background: linear-gradient(155deg, var(--page-bg-start), var(--page-bg-end));
   color: var(--text-primary);
   min-height: 100vh;
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
 }
 
 .wrap {
@@ -197,6 +199,7 @@ button.key {
   cursor: pointer;
   transition: transform 0.06s ease, filter 0.06s ease, box-shadow 0.12s ease;
   user-select: none;
+  touch-action: manipulation;
 }
 
 button.key:hover {
@@ -288,6 +291,7 @@ button.key:active {
 input[type="range"] {
   width: min(220px, 100%);
   accent-color: var(--button-border);
+  touch-action: manipulation;
 }
 
 .mono {
@@ -368,6 +372,7 @@ button.task1-fs-reset-btn {
   line-height: 1.2;
   padding: 6px 10px;
   white-space: nowrap;
+  touch-action: manipulation;
 }
 
 button.task1-fs-reset-btn:hover {
