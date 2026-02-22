@@ -10,8 +10,22 @@ function createAudioContext() {
   if (!AudioContextCtor) {
     throw new Error("web audio api is not supported in this browser");
   }
+  // Keep desktop behavior identical to the original implementation.
+  if (!isIOSDevice()) {
+    try {
+      return new AudioContextCtor({ sampleRate: FS });
+    } catch {
+      return new AudioContextCtor();
+    }
+  }
   // iOS Safari/Chrome are more reliable with the default hardware sample rate.
   return new AudioContextCtor();
+}
+
+function isIOSDevice() {
+  const ua = navigator.userAgent || "";
+  const isTouchMac = navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+  return /iPad|iPhone|iPod/.test(ua) || isTouchMac;
 }
 
 function primeAudioContext(ctx) {
@@ -22,31 +36,6 @@ function primeAudioContext(ctx) {
   src.connect(ctx.destination);
   src.start(0);
   hasPrimedAudio = true;
-}
-
-function resampleLinear(samples, inRate, outRate) {
-  if (inRate === outRate) return samples;
-
-  const outLength = Math.max(1, Math.round(samples.length * (outRate / inRate)));
-  const out = new Float32Array(outLength);
-  const inLast = Math.max(0, samples.length - 1);
-  const outLast = Math.max(1, outLength - 1);
-
-  for (let i = 0; i < outLength; i++) {
-    const pos = (i / outLast) * inLast;
-    const idx = Math.floor(pos);
-    const frac = pos - idx;
-    const a = samples[idx];
-    const b = samples[Math.min(inLast, idx + 1)];
-    out[i] = a + (b - a) * frac;
-  }
-  return out;
-}
-
-function isIOSDevice() {
-  const ua = navigator.userAgent || "";
-  const isTouchMac = navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
-  return /iPad|iPhone|iPod/.test(ua) || isTouchMac;
 }
 
 function encodeWav16Mono(samples, sampleRate) {
@@ -165,9 +154,8 @@ export async function playSamples(samples, volume) {
   }
 
   const ctx = await ensureAudio();
-  const playbackSamples = resampleLinear(samples, FS, ctx.sampleRate);
-  const buf = ctx.createBuffer(1, playbackSamples.length, ctx.sampleRate);
-  buf.copyToChannel(playbackSamples, 0);
+  const buf = ctx.createBuffer(1, samples.length, FS);
+  buf.copyToChannel(samples, 0);
 
   const src = ctx.createBufferSource();
   src.buffer = buf;
