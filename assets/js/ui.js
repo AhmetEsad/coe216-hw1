@@ -1,6 +1,6 @@
 import { DTMF, PAD_KEYS, FS } from "./constants.js";
 import { plotSignal, plotSpectrum } from "./plotting.js";
-import { generateDtmfSamples, playSamples } from "./audio.js";
+import { ensureAudio, generateDtmfSamples, playSamples } from "./audio.js";
 import { spectrum } from "./fft.js";
 
 export function setupUi() {
@@ -14,6 +14,7 @@ export function setupUi() {
   const timeInfoEl = document.getElementById("timeInfo");
   const fftInfoEl = document.getElementById("fftInfo");
   const padEl = document.getElementById("pad");
+  let audioUnlocked = false;
 
   durEl.addEventListener("input", () => {
     durLabel.textContent = `${Number(durEl.value).toFixed(2)} s`;
@@ -33,8 +34,26 @@ export function setupUi() {
     }
   }
 
+  async function unlockAudioOnce() {
+    if (audioUnlocked) return;
+    try {
+      await ensureAudio();
+      audioUnlocked = true;
+    } catch {
+      // Keep UI responsive; playback path will surface any real error to the user.
+    }
+  }
+
+  function attachAudioUnlockListeners() {
+    const opts = { once: true, passive: true };
+    window.addEventListener("pointerdown", unlockAudioOnce, opts);
+    window.addEventListener("touchstart", unlockAudioOnce, opts);
+    window.addEventListener("click", unlockAudioOnce, opts);
+  }
+
   async function onKey(key) {
     errEl.textContent = "";
+    unlockAudioOnce();
     const freqs = DTMF[key];
     if (!freqs) return;
 
@@ -73,4 +92,5 @@ export function setupUi() {
   }
 
   buildPad();
+  attachAudioUnlockListeners();
 }
